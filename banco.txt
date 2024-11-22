@@ -1,0 +1,19 @@
+USUÁRIO
+- id
+- nome
+- CPF
+- email
+- senha
+- criando em
+
+
+CARRO
+- id
+- marca
+- modelo
+- tipo veiculo (sedan, hatch...)
+- cor
+- ano
+- status
+
+
