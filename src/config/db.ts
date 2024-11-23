@@ -1,10 +1,29 @@
 import { Pool } from "pg"
+import dotenv from 'dotenv'
+dotenv.config()
 
-const pool = new Pool({
-    host: process.env.DB_HOST || "localhost", 
-    user: process.env.DB_USERNAME || "postgres",
-    password: process.env.DB_PASSWORD || "senha_do_postgres", 
-    database: process.env.DB_NAME || "DB_aluguel_de_carros",
-    port: 5432, // Porta do banco
-
+export const client = new Pool({
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    database: process.env.DB_NAME
   });
+
+export async function db_connect(){
+    await client.connect()
+}
+
+export async function db_endConnection(){
+  await client.end()
+}
+
+export async function db_query(query: string) {
+  const res = await client.query(query)
+  return res
+}
+
+export async function db_query_params(query: string, values: any[]) {
+  const results = await client.query(query, values)
+  return results
+}

@@ -6,6 +6,17 @@ USUÁRIO
 - senha
 - criando em
 
+-----------------------
+create table users
+( id_user integer not null,
+name char(30) not null,
+cpf char(11) not null,
+email char(30) not null,
+password char(60) not null,
+created_at TIMESTAMP NOT NULL,
+primary key (id_user));
+------------------------
+
 
 CARRO
 - id
