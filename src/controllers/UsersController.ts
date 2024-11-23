@@ -41,4 +41,16 @@ export class UsersController{
             }
         }
     }
+
+    deletedUser: Handler = async (req, res) => {
+        const {id} = req.params
+        try {
+            const deletedUser = await UsersService.deletedUser(+id)
+            res.json(deletedUser)
+        } catch (error) {
+            if(error instanceof HttpError) {
+                res.status(error.status).json({message: error.message})
+            }
+        }
+    }
 }

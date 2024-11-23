@@ -10,7 +10,6 @@ export class UsersService {
         const user = await UsersRepository.findUserById(id)
 
         if(!user || user == null || user == undefined) {
-            console.log("teste")
             throw new HttpError(404, "Usuário não encontrado")
         } else {
             return user
@@ -25,6 +24,16 @@ export class UsersService {
         } else {
             const newUser = await UsersRepository.createUser({name, cpf, email, password})
             return newUser
+        }
+    }
+
+    static async deletedUser(id: number) {
+        const userDeleted = await UsersRepository.deletedUser(id)
+
+        if(!userDeleted) {
+            throw new HttpError(404, "Usuário não encontrado")
+        } else {
+            return userDeleted
         }
     }
 }

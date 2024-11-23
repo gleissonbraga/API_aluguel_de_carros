@@ -36,10 +36,9 @@ export class UsersRepository {
         await db_connect()
     
         const sql = "select * from users"
-        const res = await db_query(sql)
+        const result = await db_query(sql)
 
-    
-        return res.rows
+        return result.rows
     }
 
     static async findUserById(id: number) {
@@ -70,6 +69,17 @@ export class UsersRepository {
 
         const userInserido = result.rows[0]
         return userInserido
+    }
+
+    static async deletedUser(id: number) {
+        await db_connect()
+        const sql = "DELETE FROM users WHERE id_user = $1 RETURNING *"
+        const value = [id]
+
+        const result = await db_query_params(sql, value)
+        if(!result.rows || result.rows.length == 0) return null
+        const userDeleted = result.rows[0]
+        return userDeleted
     }
     
 }
