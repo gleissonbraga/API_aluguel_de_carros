@@ -11,6 +11,13 @@ const UserRequestSchema = z.object({
     password: z.string(),
 })
 
+const UpdateRequestSchema = z.object({
+    name: z.string(),
+    cpf: z.string(),
+    email: z.string(),
+    password: z.string(),
+})
+
 export class UsersController{
     // GET /api/users
     showAllUsers: Handler = async (req, res) => {
@@ -38,6 +45,19 @@ export class UsersController{
         } catch (error) {
             if(error instanceof HttpError) {
                 res.status(error.status).json({ message: error.message})
+            }
+        }
+    }
+
+    updateUser: Handler = async (req, res) => {
+        const {id} = req.params
+        try {
+            const contentBody = UpdateRequestSchema.parse(req.body)
+            const update = await UsersService.updateUser(+id, contentBody)
+            res.json(update)
+        } catch (error) {
+            if(error instanceof HttpError) {
+                res.status(error.status).json({message: error.message})
             }
         }
     }

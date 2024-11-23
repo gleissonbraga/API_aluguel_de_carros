@@ -71,6 +71,26 @@ export class UsersRepository {
         return userInserido
     }
 
+    static async updateUser(id:number, attribuites: Omit<UsersAttribuites, "updatedAt" | "createdAt">) {
+        const {name, cpf, email, password} = attribuites
+        
+        if (!name || !cpf || !email || !password) {
+            return false
+        }
+        await db_connect()
+
+        const sql = "UPDATE users set name = $1, cpf = $2, email = $3, password = $4 WHERE id_user = $5 RETURNING *"
+        const criptPassword = await bcrypt.hash(password, 10)
+        const value = [name, cpf, email, criptPassword, id]
+
+        const result = await db_query_params(sql, value)
+        if(!result.rows || result.rows.length == 0) return null
+
+        const userUpdate = result.rows[0]
+
+        return userUpdate
+    }
+
     static async deletedUser(id: number) {
         await db_connect()
         const sql = "DELETE FROM users WHERE id_user = $1 RETURNING *"
@@ -82,4 +102,5 @@ export class UsersRepository {
         return userDeleted
     }
     
+
 }

@@ -7,6 +7,7 @@ const usersController = new UsersController()
 router.get("/", usersController.showAllUsers)
 router.get("/user/:id", usersController.showOneUser)
 router.post("/user", usersController.createdUser)
+router.put("/user/:id", usersController.updateUser)
 router.delete("/user/:id", usersController.deletedUser)
 
 

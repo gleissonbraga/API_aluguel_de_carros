@@ -27,6 +27,18 @@ export class UsersService {
         }
     }
 
+    static async updateUser(id: number, attribuites: {name: string, cpf: string, email: string, password: string}) {
+        const updateUser = await UsersRepository.updateUser(id, attribuites)
+
+        if(updateUser == false) {
+            throw new HttpError(400, "Erro ao atualizar usuário. Todos os dados são obrigatórios")
+        } else if(updateUser == null) {
+            throw new HttpError(400, "Usuário não encotrado")
+        } else {
+            return updateUser
+        }
+    }
+
     static async deletedUser(id: number) {
         const userDeleted = await UsersRepository.deletedUser(id)
 
