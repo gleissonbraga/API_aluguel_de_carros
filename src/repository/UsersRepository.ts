@@ -22,9 +22,9 @@ export class UsersRepository {
     updatedAt: Date
 
     constructor(attribuites: UsersAttribuites) {
-        this.name = attribuites.name,
-        this.cpf = attribuites.cpf,
-        this.email = attribuites.email,
+        this.name = attribuites.name
+        this.cpf = attribuites.cpf
+        this.email = attribuites.email
         this.password = attribuites.password
         this.createdAt = attribuites.createdAt
         this.updatedAt = attribuites.updatedAt
@@ -38,7 +38,12 @@ export class UsersRepository {
         const sql = "select * from users"
         const result = await db_query(sql)
 
-        return result.rows
+        const usersWithoutPassword = result.rows.map(user => {
+            const { password, ...userWithoutPassword } = user
+            return userWithoutPassword
+        })
+
+        return usersWithoutPassword
     }
 
     static async findUserById(id: number) {
@@ -50,7 +55,10 @@ export class UsersRepository {
         if(!result.rows || result.rows.length == 0) return null
 
         const user = result.rows[0]
-        return user
+
+        const {password, ...userWithoutPassword} = user
+        
+        return userWithoutPassword
     }
 
     static async createUser(attribuites: Omit<UsersAttribuites, "updatedAt" | "createdAt">) {
@@ -62,8 +70,8 @@ export class UsersRepository {
 
         const criptPassword = await bcrypt.hash(password, 10)
 
-        const sql = "insert into users(name, cpf, email, password, created_at) values ($1, $2, $3, $4, $5) RETURNING *"
-        const values = [name, cpf, email, criptPassword, createdAt]
+        const sql = "insert into users(name, cpf, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *"
+        const values = [name.toLowerCase(), cpf, email.toLowerCase(), criptPassword, createdAt]
         
         const result = await db_query_params(sql, values)
 
@@ -79,7 +87,7 @@ export class UsersRepository {
         }
         await db_connect()
 
-        const sql = "UPDATE users set name = $1, cpf = $2, email = $3, password = $4 WHERE id_user = $5 RETURNING *"
+        const sql = "UPDATE users SET name = $1, cpf = $2, email = $3, password = $4 WHERE id_user = $5 RETURNING *"
         const criptPassword = await bcrypt.hash(password, 10)
         const value = [name, cpf, email, criptPassword, id]
 

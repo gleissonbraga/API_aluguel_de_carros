@@ -23,8 +23,18 @@ CARRO
 - marca
 - modelo
 - tipo veiculo (sedan, hatch...)
+- placa
 - cor
 - ano
 - status
 
-
+CREATE TABLE cars (
+    id_carro SERIAL PRIMARY KEY,
+    marca CHAR(15) NOT NULL,
+    modelo CHAR(20) NOT NULL,
+    tipo CHAR(20) NOT NULL,
+    placa CHAR(7) NOT NULL,
+    cor CHAR(15) NOT NULL,
+    ano CHAR(4) NOT NULL,
+    status CHAR(10) NOT NULL
+);
