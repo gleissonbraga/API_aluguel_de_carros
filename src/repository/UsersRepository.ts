@@ -35,7 +35,7 @@ export class UsersRepository {
 
         await db_connect()
     
-        const sql = "select * from users"
+        const sql = "select * from users ORDER BY id_user"
         const result = await db_query(sql)
 
         const usersWithoutPassword = result.rows.map(user => {
@@ -89,9 +89,9 @@ export class UsersRepository {
 
         const sql = "UPDATE users SET name = $1, cpf = $2, email = $3, password = $4 WHERE id_user = $5 RETURNING *"
         const criptPassword = await bcrypt.hash(password, 10)
-        const value = [name, cpf, email, criptPassword, id]
+        const values = [name, cpf, email, criptPassword, id]
 
-        const result = await db_query_params(sql, value)
+        const result = await db_query_params(sql, values)
         if(!result.rows || result.rows.length == 0) return null
 
         const userUpdate = result.rows[0]

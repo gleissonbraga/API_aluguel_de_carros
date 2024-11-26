@@ -42,4 +42,17 @@ export class CarsService{
             return car
         }
     }
+
+    static async updateCar(id: number, attribuites: {marca: string, modelo: string, tipo: string, placa: string, cor: string, ano: string}) {
+
+        const updateCar = await CarsRepository.updateCar(id, attribuites)
+
+        if(updateCar === false) {
+            throw new HttpError(400, "Erro ao atualizar usuário. Todos os dados são obrigatórios")
+        } else if(updateCar === null) {
+            throw new HttpError(400, "Carro não encontrado")
+        } else {
+            return updateCar
+        }
+    }
 }

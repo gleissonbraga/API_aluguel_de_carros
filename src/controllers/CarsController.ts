@@ -14,6 +14,15 @@ const CarRequestSchema = z.object({
     status: z.string(),
 })
 
+const UpdateCarRequestSchema = z.object({
+    marca: z.string(),
+    modelo: z.string(),
+    tipo: z.string(),
+    placa: z.string(),
+    cor: z.string(),
+    ano: z.string(),
+})
+
 const CarByNameRequestSchema = z.object({
     modelo: z.string()
 })
@@ -63,6 +72,19 @@ export class CarsController {
                 res.status(error.status).json({ message: error.message})
             }
         }
+    }
+
+    updateCar: Handler = async(req, res) => {
+        const {id} = req.params
+        try {
+            const contentBody = UpdateCarRequestSchema.parse(req.body)
+            const updateCar = await CarsService.updateCar(+id, contentBody)
+            res.json(updateCar)
+        } catch (error) {
+            if(error instanceof HttpError) {
+                res.status(error.status).json({message: error.message})
+            }
+        } 
     }
 }
 

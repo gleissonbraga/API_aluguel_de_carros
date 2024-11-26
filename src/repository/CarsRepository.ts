@@ -36,7 +36,7 @@ export class CarsRepository {
     static async showCars(){
         await db_connect()
 
-        const sql = "SELECT * FROM cars"
+        const sql = "SELECT * FROM cars ORDER BY id_carro"
         const result = await db_query(sql)
 
         return result.rows
@@ -61,6 +61,8 @@ export class CarsRepository {
 
     static async findCarsByModelo(name: string){
         const lowerName = name.toLowerCase();
+
+        if(lowerName.trim() === "" ) return null
 
 
         const sql = "SELECT * FROM cars WHERE modelo ILIKE $1"
@@ -88,5 +90,28 @@ export class CarsRepository {
         console.log(car)
 
         return car
+    }
+
+    static async updateCar(id: number, attribuites: Omit<CarsAttributes, "status" | "createdAt">) {
+        const { marca, modelo, tipo, placa, cor, ano } = attribuites
+
+        const marcaLower = marca.toLocaleLowerCase()
+        const modeloLower = modelo.toLocaleLowerCase()
+        const tipoLower = tipo.toLocaleLowerCase()
+        const placaLower = placa.toLocaleLowerCase()
+        const corLower = cor.toLocaleLowerCase()
+
+        if(!marca || !modelo || !tipo || !placa || !cor || !ano) return false
+
+        const sql = "UPDATE cars SET marca = $1, modelo = $2, tipo = $3, placa = $4, cor = $5, ano = $6 WHERE id_carro = $7 RETURNING *"
+        const values = [marcaLower, modeloLower, tipoLower, placaLower, corLower, ano, id]
+
+        const result = await db_query_params(sql, values)
+
+        if(!result.rows || result.rows.length == 0) return null
+
+        const carUpdate = result.rows[0]
+
+        return carUpdate
     }
 }

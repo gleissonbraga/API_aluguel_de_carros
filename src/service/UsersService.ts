@@ -33,7 +33,7 @@ export class UsersService {
         if(updateUser == false) {
             throw new HttpError(400, "Erro ao atualizar usuário. Todos os dados são obrigatórios")
         } else if(updateUser == null) {
-            throw new HttpError(400, "Usuário não encotrado")
+            throw new HttpError(400, "Usuário não encontrado")
         } else {
             return updateUser
         }

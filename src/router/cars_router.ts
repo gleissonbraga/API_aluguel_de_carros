@@ -8,6 +8,7 @@ router_cars.get("/cars", carsController.showAllCars)
 router_cars.post("/cars", carsController.createCar)
 router_cars.get("/cars/modelo", carsController.showCarByModelo)
 router_cars.get("/cars/placa", carsController.findCarByPlate)
+router_cars.put("/cars/atualizar/:id", carsController.updateCar)
 
 
 
