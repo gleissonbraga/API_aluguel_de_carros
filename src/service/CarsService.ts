@@ -19,4 +19,27 @@ export class CarsService{
             return newCar
         }
     }
+
+    static async findCarsByModelo(name: string) {
+
+        const car = await CarsRepository.findCarsByModelo(name)
+
+        if(car === null){
+            throw new HttpError(400, "Modelo não encontrado")
+        } else {
+            return car
+        }
+    }
+
+    static async findCarByPlate(plate: string){
+        const car = await CarsRepository.findCarByPlate(plate)
+
+        if(car === false) {
+            throw new HttpError(400, "Insira os dados corretos")
+        } else if (car === null){
+            throw new HttpError(400, "Placa não encontrada")
+        } else {
+            return car
+        }
+    }
 }

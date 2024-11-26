@@ -58,4 +58,35 @@ export class CarsRepository {
         return carInsert
 
     }
+
+    static async findCarsByModelo(name: string){
+        const lowerName = name.toLowerCase();
+
+
+        const sql = "SELECT * FROM cars WHERE modelo ILIKE $1"
+        const value = [`%${lowerName}%`]
+
+        const result = await db_query_params(sql,value)
+        if(result.rows.length === 0) return null
+
+        return result.rows
+    }
+
+    static async findCarByPlate(plate: string){
+        const lowerPlate = plate.toLowerCase()
+        const regex = /^[a-z]{3}[0-9][a-z][0-9]{2}$/i
+        if(!regex.test(plate) || plate === ' ') return false
+        
+
+        const sql = "SELECT * FROM cars WHERE placa = $1"
+        const value = [lowerPlate]
+        const result = await db_query_params(sql, value)
+        if(result.rows.length === 0) return null
+
+        const car = result.rows[0]
+
+        console.log(car)
+
+        return car
+    }
 }
