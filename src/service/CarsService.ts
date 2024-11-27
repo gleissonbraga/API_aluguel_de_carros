@@ -8,14 +8,14 @@ export class CarsService{
         return await CarsRepository.showCars()
     }
 
-    static async createCar(attribuites: {marca: string, modelo: string, tipo: string, placa: string, cor: string, ano: string, status: string}) {
+    static async createCar(attribuites: {marca: string, modelo: string, tipo: string, placa: string, cor: string, ano: string, status: string, priceBuy: number, priceSale: number, priceRent: number}) {
 
-        const {marca, modelo, tipo, placa, cor, ano, status} = attribuites
+        const {marca, modelo, tipo, placa, cor, ano, status, priceBuy, priceSale, priceRent} = attribuites
         
-        if(!marca || !modelo || !tipo || !placa || !cor || !ano || !status) {
+        if(!marca || !modelo || !tipo || !placa || !cor || !ano || !status || !priceBuy || !priceSale || !priceRent) {
             throw new HttpError(400, "Erro ao cadastrar o carro. Todos os dados são obrigatórios")
         } else {
-            const newCar = await CarsRepository.createCar({marca, modelo, tipo, placa, cor, ano, status})
+            const newCar = await CarsRepository.createCar({marca, modelo, tipo, placa, cor, ano, status, priceBuy, priceSale, priceRent})
             return newCar
         }
     }
@@ -25,9 +25,22 @@ export class CarsService{
         const car = await CarsRepository.findCarsByModelo(name)
 
         if(car === null){
-            throw new HttpError(400, "Modelo não encontrado")
+            throw new HttpError(400, `Modelo não encontrado`)
         } else {
             return car
+        }
+    }
+
+    static async findCarsByStatus(status: string) {
+
+        const cars = await CarsRepository.findCarsByStatus(status)
+
+        if(cars === false){
+            throw new HttpError(400, `O campo esta vazio. Insira um dado válido`)
+        } else if (cars === null){
+            throw new HttpError(400, `Não temos carro ${status}`)
+        } else {
+            return cars
         }
     }
 
@@ -43,7 +56,7 @@ export class CarsService{
         }
     }
 
-    static async updateCar(id: number, attribuites: {marca: string, modelo: string, tipo: string, placa: string, cor: string, ano: string}) {
+    static async updateCar(id: number, attribuites: {marca: string, modelo: string, tipo: string, placa: string, cor: string, ano: string, priceBuy: number, priceSale: number, priceRent: number}) {
 
         const updateCar = await CarsRepository.updateCar(id, attribuites)
 

@@ -42,6 +42,21 @@ CREATE TABLE cars (
     status CHAR(10) NOT NULL
 );
 
+CREATE TABLE cars_new (
+    id_carro SERIAL PRIMARY KEY,
+    marca CHAR(15) NOT NULL,
+    modelo CHAR(20) NOT NULL,
+    tipo CHAR(20) NOT NULL,
+    placa CHAR(7) NOT NULL,
+    cor CHAR(15) NOT NULL,
+    ano CHAR(4) NOT NULL,
+    status CHAR(10) NOT NULL,
+    priceBuy NUMERIC(10, 2) NOT NULL,
+    priceSale NUMERIC(10, 2) NOT NULL,
+    priceRent NUMERIC(10, 2) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 ------------------------
 
 TABLE ALUGUEL

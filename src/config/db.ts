@@ -21,7 +21,7 @@ export async function db_endConnection(){
 export async function db_query(query: string) {
   const res = await client.query(query)
   return res
-}
+} 
 
 export async function db_query_params(query: string, values: any[]) {
   const results = await client.query(query, values)

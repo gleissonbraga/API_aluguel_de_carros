@@ -12,7 +12,12 @@ const CarRequestSchema = z.object({
     cor: z.string(),
     ano: z.string(),
     status: z.string(),
+    priceBuy: z.number(),
+    priceSale: z.number(),
+    priceRent: z.number(),
 })
+
+
 
 const UpdateCarRequestSchema = z.object({
     marca: z.string(),
@@ -21,6 +26,9 @@ const UpdateCarRequestSchema = z.object({
     placa: z.string(),
     cor: z.string(),
     ano: z.string(),
+    priceBuy: z.number(),
+    priceSale: z.number(),
+    priceRent: z.number(),
 })
 
 const CarByNameRequestSchema = z.object({
@@ -29,6 +37,10 @@ const CarByNameRequestSchema = z.object({
 
 const CarByPlateRequestSchema = z.object({
     plate: z.string()
+})
+
+const CarsByStatusRequestSchema = z.object({
+    status: z.string()
 })
 
 
@@ -61,6 +73,18 @@ export class CarsController {
             }
         }
     }   
+
+    findCarByStatus: Handler = async (req, res) => {
+        try {
+            const parsedBody = CarsByStatusRequestSchema.parse(req.body)
+            const cars = await CarsService.findCarsByStatus(parsedBody.status)
+            res.json(cars)
+        } catch (error) {
+            if(error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message})
+            }
+        }
+    } 
 
     findCarByPlate: Handler = async (req, res) => {
         try {
