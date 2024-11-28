@@ -30,17 +30,9 @@ CARRO
 - cor
 - ano
 - status
-
-CREATE TABLE cars (
-    id_carro SERIAL PRIMARY KEY,
-    marca CHAR(15) NOT NULL,
-    modelo CHAR(20) NOT NULL,
-    tipo CHAR(20) NOT NULL,
-    placa CHAR(7) NOT NULL,
-    cor CHAR(15) NOT NULL,
-    ano CHAR(4) NOT NULL,
-    status CHAR(10) NOT NULL
-);
+- preco compra
+- preco venda
+- preco aluguel
 
 CREATE TABLE cars_new (
     id_carro SERIAL PRIMARY KEY,
@@ -60,3 +52,12 @@ CREATE TABLE cars_new (
 ------------------------
 
 TABLE ALUGUEL
+
+CREATE TABLE rented_cars (
+    id_aluguel SERIAL PRIMARY KEY,
+    id_carro INT NOT NULL REFERENCES cars(id_carro) ON DELETE CASCADE,
+    id_usuario INT NOT NULL REFERENCES users(id_usuario) ON DELETE CASCADE,
+    data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    data_fim TIMESTAMP NULL,
+    status_aluguel CHAR(10) DEFAULT 'ativo' NOT NULL
+);
