@@ -110,6 +110,20 @@ export class UsersRepository {
         return userDeleted
     }
     
-    
+    static async getEmail(attribuites: {email: string}) {
+        const {email} = attribuites
+
+
+        db_connect()
+
+        const sql = "SELECT * FROM users WHERE email = $1 RETURNING *"
+        const value = [email.toLowerCase()]
+
+        const result = await db_query_params(sql, value)
+
+        const resultEmail = result.rows[0]
+
+        return resultEmail
+    }
 
 }
