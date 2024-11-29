@@ -8,8 +8,11 @@ USUÁRIO
 - senha
 - criando em
 
+insert into users(name, cpf, email, password, created_at) VALUES ('gleisson', '85907219068', 'bragagleisson@gmail.com', 'gleisson', '2024-11-29T02:23:01.064Z') RETURNING *
+
+
 create table users
-( id_user integer not null,
+( id_user serial not null,
 name char(30) not null,
 cpf char(11) not null,
 email char(30) not null,
@@ -34,7 +37,7 @@ CARRO
 - preco venda
 - preco aluguel
 
-CREATE TABLE cars_new (
+CREATE TABLE cars (
     id_carro SERIAL PRIMARY KEY,
     marca CHAR(15) NOT NULL,
     modelo CHAR(20) NOT NULL,
@@ -43,21 +46,32 @@ CREATE TABLE cars_new (
     cor CHAR(15) NOT NULL,
     ano CHAR(4) NOT NULL,
     status CHAR(10) NOT NULL,
-    priceBuy NUMERIC(10, 2) NOT NULL,
-    priceSale NUMERIC(10, 2) NOT NULL,
-    priceRent NUMERIC(10, 2) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    preco_compra NUMERIC(10, 2) NOT NULL,
+    preco_venda NUMERIC(10, 2) NOT NULL,
+    preco_aluguel NUMERIC(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 ------------------------
 
 TABLE ALUGUEL
 
-CREATE TABLE rented_cars (
-    id_aluguel SERIAL PRIMARY KEY,
-    id_carro INT NOT NULL REFERENCES cars(id_carro) ON DELETE CASCADE,
-    id_usuario INT NOT NULL REFERENCES users(id_usuario) ON DELETE CASCADE,
-    data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    data_fim TIMESTAMP NULL,
-    status_aluguel CHAR(10) DEFAULT 'ativo' NOT NULL
+CREATE TABLE aluguel_carros (
+    id_aluguel SERIAL PRIMARY KEY,      
+    id_carro INT NOT NULL,                  
+    id_user INT NOT NULL,                
+    data_inicio DATE NOT NULL,              
+    data_fim DATE,                          
+    status_aluguel CHAR(10) DEFAULT 'ativo',        
+    FOREIGN KEY (id_carro) REFERENCES cars(id_carro) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
+
+
+
+INNER JOIN sql
+
+select u.name, c.marca, c.modelo, c.placa, c.cor from users u
+join aluguel_carros a on (a.id_user = u.id_user)
+join cars c on (c.id_carro = a.id_carro)
+where a.status_aluguel = 'ativo'
