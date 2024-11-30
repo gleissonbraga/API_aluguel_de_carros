@@ -42,19 +42,18 @@ export class RentalRepository{
 
         if(carExist.rows.length === 0) return true
         
-        
         const sqlExistUser = "SELECT * FROM users WHERE id_user = $1"
         const valueExistUser = [id_user]
         const UserExist = await db_query_params(sqlExistUser, valueExistUser)
         
         if(UserExist.rows.length === 0) return false
 
-
-        const sqlCheckCar = "SELECT * FROM cars WHERE id_carro = $1 and status = 'disponivel'"
-        const valueCheckCar = [id_car]
+        const active = "ativo"
+        const sqlCheckCar = "SELECT * FROM aluguel_carros WHERE id_carro = $1 AND status_aluguel = $2"
+        const valueCheckCar = [id_car, active]
         const carStatus = await db_query_params(sqlCheckCar, valueCheckCar)
 
-        if(carStatus.rows.length === 0) return null
+        if(carStatus.rows.length > 0) return null
 
         const sql = "INSERT INTO aluguel_carros(id_carro, id_user, data_inicio, status_aluguel) VALUES ($1, $2, $3, $4) RETURNING *"
         const values = [id_car, id_user, start_date, low_status_rental]
@@ -77,11 +76,11 @@ export class RentalRepository{
     static async returnCar(id_car: number, id_user: number) {
         db_connect()
 
-        
         await db_query('BEGIN')
 
         const low_status_rental = 'desativado'
         const low_status_car = 'disponivel'
+        const dateReturnRental = new Date()
 
         const sqlCarAndUser = "SELECT * FROM aluguel_carros WHERE id_carro = $1 AND id_user = $2"
         const sqlValuCarAndUser = [id_car, id_user]
@@ -89,9 +88,11 @@ export class RentalRepository{
 
         if(sqlResultCarAndUser.rows.length === 0) return false
 
-        const sqlCarReturnStatusRental = "UPDATE aluguel_carros SET status_aluguel = $1 WHERE id_carro = $2"
-        const valuesCarReturnStatusRental = [low_status_rental, id_car]
-        await db_query_params(sqlCarReturnStatusRental, valuesCarReturnStatusRental)
+        const active = "ativo"
+
+        const sqlCarReturnStatusRental = "UPDATE aluguel_carros SET status_aluguel = $1, data_fim = $2 WHERE id_carro = $3 AND id_user = $4 AND status_aluguel = $5"
+        const valuesCarReturnStatusRental = [low_status_rental, dateReturnRental, id_car, id_user, active]
+        await db_query_params(sqlCarReturnStatusRental,  valuesCarReturnStatusRental)
 
         const sqlCarReturnStatus = "UPDATE cars SET status = $1 WHERE id_carro = $2 RETURNING *"
         const valuesCarReturnStatus = [low_status_car, id_car]

@@ -26,6 +26,8 @@ export class CarsService{
 
         if(car === null){
             throw new HttpError(400, `Modelo não encontrado`)
+        } else if(car === false){
+            throw new HttpError(400, `Insira uma placa`)
         } else {
             return car
         }
@@ -61,7 +63,7 @@ export class CarsService{
         const updateCar = await CarsRepository.updateCar(id, attribuites)
 
         if(updateCar === false) {
-            throw new HttpError(400, "Erro ao atualizar usuário. Todos os dados são obrigatórios")
+            throw new HttpError(400, "Erro ao atualizar o carro. Todos os dados são obrigatórios")
         } else if(updateCar === null) {
             throw new HttpError(400, "Carro não encontrado")
         } else {

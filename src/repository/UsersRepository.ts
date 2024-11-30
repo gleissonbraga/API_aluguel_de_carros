@@ -35,7 +35,7 @@ export class UsersRepository {
 
         await db_connect()
     
-        const sql = "select * from users ORDER BY id_user"
+        const sql = "SELECT * FROM users ORDER BY id_user"
         const result = await db_query(sql)
 
         const usersWithoutPassword = result.rows.map(user => {
@@ -49,7 +49,7 @@ export class UsersRepository {
     static async findUserById(id: number) {
         await db_connect()
 
-        const sql = "select * from users where id_user = $1"
+        const sql = "SELECT * FROM users WHERE id_user = $1"
         const value = [id]
         const result = await db_query_params(sql, value)
         if(!result.rows || result.rows.length == 0) return null
@@ -70,7 +70,7 @@ export class UsersRepository {
 
         const criptPassword = await bcrypt.hash(password, 10)
 
-        const sql = "insert into users(name, cpf, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *"
+        const sql = "INSERT INTO users(name, cpf, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *"
         const values = [name.toLowerCase(), cpf, email.toLowerCase(), criptPassword, createdAt]
         
         const result = await db_query_params(sql, values)
@@ -81,6 +81,10 @@ export class UsersRepository {
 
     static async updateUser(id:number, attribuites: Omit<UsersAttribuites, "updatedAt" | "createdAt">) {
         const {name, cpf, email, password} = attribuites
+
+        const lowerName = name.toLowerCase()
+        const lowercpf = cpf.toLowerCase()
+        const loweremail = email.toLowerCase()
         
         if (!name || !cpf || !email || !password) {
             return false
@@ -89,7 +93,7 @@ export class UsersRepository {
 
         const sql = "UPDATE users SET name = $1, cpf = $2, email = $3, password = $4 WHERE id_user = $5 RETURNING *"
         const criptPassword = await bcrypt.hash(password, 10)
-        const values = [name, cpf, email, criptPassword, id]
+        const values = [lowerName, lowercpf, loweremail, criptPassword, id]
 
         const result = await db_query_params(sql, values)
         if(!result.rows || result.rows.length == 0) return null
