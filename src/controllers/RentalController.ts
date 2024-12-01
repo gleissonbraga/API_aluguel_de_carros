@@ -6,10 +6,10 @@ import { RentalService } from "../service/RentalService";
 
 export class RentalController {
     rentalCar: Handler = async (req, res) => {
-        const {carro, user} = req.params
-
+        const {carro} = req.params
+        
         try {
-            const rental = await RentalService.rentalCar({id_car: Number(carro), id_user: Number(user)})
+            const rental = await RentalService.rentalCar({id_car: Number(carro), id_user: Number(req.userId)})
             res.json(rental)
         } catch (error) {
             if(error instanceof HttpError) {
@@ -19,10 +19,10 @@ export class RentalController {
     }
 
     returnCar: Handler = async (req, res) => {
-        const {carro, user} = req.params
+        const {carro} = req.params
 
         try {
-            const rental = await RentalService.returnCar(Number(carro), Number(user))
+            const rental = await RentalService.returnCar(Number(carro), Number(req.userId))
             res.json(rental)
         } catch (error) {
             if(error instanceof HttpError) {

@@ -101,13 +101,14 @@ export class CarsRepository {
     static async findCarByPlate(plate: string){
         const lowerPlate = plate.toLowerCase()
         const regex = /^[a-z]{3}[0-9][a-z][0-9]{2}$/i
-        if(!regex.test(plate) || plate === ' ') return false
+        if(!regex.test(lowerPlate) || lowerPlate === '' || lowerPlate.length !== 7) return false
         
+        await db_connect()
 
         const sql = "SELECT * FROM cars WHERE placa = $1"
         const value = [lowerPlate]
         const result = await db_query_params(sql, value)
-        if(result.rows.length === 0) return null
+        if(!result.rows || result.rows.length === 0) return null
 
         const car = result.rows[0]
 

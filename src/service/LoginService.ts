@@ -37,7 +37,7 @@ export class LoginService {
         try {
             if(!process.env.JWT_KEY) throw new HttpError(404, "JWT_KEY não definida nas variáveis de ambiente")
 
-            const payload = jwt.verify(token, process.env.JWT_KEY) 
+            const payload = jwt.verify(token, process.env.JWT_KEY) as {id: number, name: string, cpf: string}
             
             return payload
         } catch (error) {

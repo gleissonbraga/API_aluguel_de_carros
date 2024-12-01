@@ -8,8 +8,8 @@ const router_rental = Router()
 const rentalController = new RentalController()
 
 
-router_rental.post("/cars/:carro/user/:user", rentalController.rentalCar)
-router_rental.put("/cars/:carro/user/:user", rentalController.returnCar)
+router_rental.post("/cars/:carro/user/", rentalController.rentalCar)
+router_rental.put("/cars/:carro/user/", rentalController.returnCar)
 
 
 

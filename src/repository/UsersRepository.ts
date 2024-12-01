@@ -126,7 +126,7 @@ export class UsersRepository {
         const result = await db_query_params(sql, value)
 
         const resultUser = result.rows[0]
-        console.log(resultUser)
+        
         return resultUser
     }
 

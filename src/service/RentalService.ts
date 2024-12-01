@@ -25,7 +25,7 @@ export class RentalService {
         if(returnRentalCar === false) {
             throw new HttpError(400, "Este carro esta alugado")
         } else if(returnRentalCar === true) {
-            throw new HttpError(400, "Não é possivel devolver este carro. Estes dados não existem")
+            throw new HttpError(400, "Este carro não esta alugado")
         } else {
             
             return returnRentalCar

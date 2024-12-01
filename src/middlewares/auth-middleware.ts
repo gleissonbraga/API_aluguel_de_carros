@@ -3,6 +3,12 @@ import { Handler } from "express";
 import { z } from "zod"
 import { HttpError } from "../errors/HttpError";
 
+const payloadSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    cpf: z.string(),
+
+})
 export class AuthMiddleware {
 
     authUser: Handler = async (req, res, next) => {
@@ -15,6 +21,10 @@ export class AuthMiddleware {
 
             console.log({payload})
             
+            
+            const teste = payloadSchema.parse(payload)
+            req.payload = teste
+            req.userId = req.payload.id;
             next()
         } catch (error) {
             if(error instanceof HttpError){
