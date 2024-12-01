@@ -120,14 +120,14 @@ export class UsersRepository {
 
         db_connect()
 
-        const sql = "SELECT * FROM users WHERE email = $1 RETURNING *"
+        const sql = "SELECT * FROM users WHERE email = $1"
         const value = [email.toLowerCase()]
 
         const result = await db_query_params(sql, value)
 
-        const resultEmail = result.rows[0]
-
-        return resultEmail
+        const resultUser = result.rows[0]
+        console.log(resultUser)
+        return resultUser
     }
 
 }

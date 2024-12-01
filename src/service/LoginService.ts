@@ -13,19 +13,37 @@ export class LoginService {
         const user = await UsersRepository.getEmail({email})
 
         if(!user) throw new HttpError(404, "Este usuário não existe")
-
+        
         const isValidPassword = await bcrypt.compare(password, user.password)
+
+
         if(!isValidPassword){
             throw new HttpError(401, "Usuario ou senha inválidos")
         } else {
 
-            const payload = {name: user.name, cpf: user.cpf}
-
+            
             if(!process.env.JWT_KEY) throw new HttpError(404, "JWT_KEY não definida nas variáveis de ambiente")
 
+                
+            const payload = {id: user.id_user, name: user.name, cpf: user.cpf}
+
             const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1h'})
-            return {id: 201, msg: token}
+            return {id: 200, token}
         }
 
     }   
+
+    static async verifyToken(token: string) {
+        try {
+            if(!process.env.JWT_KEY) throw new HttpError(404, "JWT_KEY não definida nas variáveis de ambiente")
+
+            const payload = jwt.verify(token, process.env.JWT_KEY) 
+            
+            return payload
+        } catch (error) {
+            if(error){
+                throw new HttpError(401, "Token Inválido!" )
+            }
+        }
+    }
 }

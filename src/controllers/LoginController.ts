@@ -9,11 +9,14 @@ const UserRequestSchema = z.object({
 })
 
 export class LoginController {
-    static login: Handler = async (req, res) => {
+    login: Handler = async (req, res) => {
 
         try {
             const parsedBody = UserRequestSchema.parse(req.body)
-            const userValidation = LoginService.login(parsedBody)
+            
+            const userValidation = await LoginService.login(parsedBody)
+        
+            
             res.json(userValidation)
         } catch (error) {
             if(error instanceof HttpError){
