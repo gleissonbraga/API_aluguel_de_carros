@@ -23,8 +23,11 @@ export class RentalService {
         const returnRentalCar = await RentalRepository.returnCar(id_car, id_user)
 
         if(returnRentalCar === false) {
-            throw new HttpError(400, "Este carro esta alugado por outra pessoa!")
+            throw new HttpError(400, "Este carro esta alugado")
+        } else if(returnRentalCar === true) {
+            throw new HttpError(400, "Não é possivel devolver este carro. Estes dados não existem")
         } else {
+            
             return returnRentalCar
         }
     }
